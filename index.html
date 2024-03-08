@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crash Game</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="game-container">
+        <div class="dot"></div>
+        <div class="button-container">
+            <button id="bet-btn">Place Bet</button>
+            <button id="cash-out-btn">Cash Out!</button>
+        </div>
+        <input type="number" id="bet-input" placeholder="Enter your bet">
+        <button id="reset-btn" style="display: none;">Reset</button>
+        <p id="multiplier">Multiplier: 1.00x</p>
+        <p id="timer">Time: 0s</p>
+        <p id="result"></p>
+        <p id="balance-display">Balance: 5.00 credits</p>
+    </div>    
+    <!-- Results section -->
+    <div id="results-section">
+        <h2>Results</h2>
+        <ul id="results-list"></ul>
+    </div>
+    </div>    
+    <!-- Leaderboard section -->
+    <div id="leaderboard-section">
+    <h2>Leaderboard</h2>
+    <ul id="leaderboard-list"></ul>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
+
+
