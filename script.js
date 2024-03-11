@@ -38,6 +38,10 @@ function displayResult(bet, multiplier, winnings, outcome) {
         outcomeText = 'W'; // 'W' for cash out
     } else {
         outcomeText = 'L'; // 'L' for crash
+        // If the outcome is a crash, set winnings to 0.00
+        if (outcome === 'Crash') {
+            winnings = 0.00;
+        }
     }
     li.textContent = `Bet: ${bet.toFixed(2)} | Multiplier: ${multiplier.toFixed(2)}x | Winnings: ${winnings.toFixed(2)} | Outcome: ${outcomeText}`;
     resultDisplay.appendChild(li);
@@ -148,15 +152,15 @@ function updateBalanceDisplay() {
     balanceDisplay.textContent = `Balance: ${balance.toFixed(2)} credits`;
 }
 
-function displayResult(bet, multiplier, outcome) {
+function displayResult(bet, multiplier, winnings, outcome) {
     const li = document.createElement('li');
     let outcomeText;
     if (outcome === 'Cash Out!') {
-        outcomeText = 'W'; // 'W' for cash out
+        outcomeText = 'W'; // 'W' for win
     } else {
-        outcomeText = 'L'; // 'L' for crash
+        outcomeText = 'L'; // 'L' for loss
     }
-    li.textContent = `Bet: ${bet.toFixed(2)} | Multiplier: ${multiplier.toFixed(2)}x | Outcome: ${outcomeText}`;
+    li.textContent = `Bet: ${bet.toFixed(2)} | Multiplier: ${multiplier.toFixed(2)}x | Winnings: ${winnings.toFixed(2)} | Outcome: ${outcomeText}`;
     resultDisplay.appendChild(li);
 }
 
@@ -194,11 +198,11 @@ function stopGame() {
         // Calculate the valid payout based on the cash-out multiplier
         validPayout = validBetAmount * cashOutMultiplier;
     
-        // Calculate the net winnings (winnings minus initial bet)
-        const winnings = validPayout - validBetAmount;
+        // Subtract the bet amount from the balance
+        balance -= validBetAmount;
     
-        // Add net winnings to the remaining balance
-        balance += winnings;
+        // Add the valid payout (winnings) to the balance
+        balance += validPayout;
     
         // Update the balance display to reflect the updated balance
         balanceDisplay.textContent = `Balance: ${balance.toFixed(2)} credits`;
@@ -216,7 +220,8 @@ function stopGame() {
         console.log(`Output: You won ${validPayout.toFixed(2)} credits. Current balance: ${balance.toFixed(2)} credits!`);
     
         // Call displayResult() to update the results section
-        displayResult(validBetAmount, cashOutMultiplier, outcomeText); // Pass cashOutMultiplier instead of multiplier
+        displayResult(validBetAmount, cashOutMultiplier, validPayout, outcomeText); // Pass validPayout as winnings
+
     
         // Update balance display
         updateBalanceDisplay();
@@ -226,8 +231,9 @@ function stopGame() {
     } else {
         // Handle crash scenario
     
-        // Deduct the bet amount from the balance in the crash scenario
+        // Subtract the bet amount from the balance
         balance -= validBetAmount;
+    
         outcomeText = 'Crash'; // Set outcome to 'Crash'
         result.textContent = `You crashed at position ${currentPosition}px. You lost ${validBetAmount} credits. Current balance: ${balance.toFixed(2)} credits.`;
     
@@ -238,7 +244,7 @@ function stopGame() {
         console.log(`Output: You lost ${validBetAmount} credits. Current balance: ${balance.toFixed(2)} credits.`);
     
         // Call displayResult() to update the results section
-        displayResult(validBetAmount, crashMultiplier, outcomeText); // Pass crashMultiplier instead of multiplier
+        displayResult(validBetAmount, crashMultiplier, 0, outcomeText); // Pass 0 as winnings for crash scenario
     
         // Update balance display
         updateBalanceDisplay();
@@ -247,6 +253,9 @@ function stopGame() {
         resetBtn.style.display = 'block'; // Show reset button
     }
 }
+
+
+
 // Function to reset the game and update player data
 function resetGameAndUpdatePlayerData() {
     // Reset game state variables
